@@ -37,5 +37,8 @@ ready( function () {
 				return v;
 			}
 		} )
-		.add( 'country' );
+		.add( 'country' )
+		.submit( _ => {
+			console.log( 'Fine !' );
+		} );
 } );

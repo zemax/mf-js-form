@@ -51,7 +51,7 @@ class FormManager {
 			errorContainer = options.errorContainer;
 		}
 		else {
-			errorContainer = fieldContainer.querySelector( '.error-container' );
+			errorContainer = !!fieldContainer ? fieldContainer.querySelector( '.error-container' ) : false;
 			errorContainer = !!errorContainer ? errorContainer : false;
 		}
 
@@ -64,6 +64,11 @@ class FormManager {
 
 		this.rules.push( options.type( options ).set( name, this.form ) );
 
+		return (this);
+	}
+
+	submit( f ) {
+		this.options.submit = f;
 		return (this);
 	}
 
@@ -132,11 +137,17 @@ class FormManager {
 			 */
 		}
 
-		if ( ok ) {
-			this.messenger.hide();
-		}
-		else {
+		if ( !ok ) {
 			e.preventDefault();
+			return;
+		}
+
+		this.messenger.hide();
+
+		if ( !!this.options.submit ) {
+			e.preventDefault();
+
+			this.options.submit( this );
 		}
 	}
 }
