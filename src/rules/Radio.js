@@ -9,6 +9,10 @@ function Radio( options = {} ) {
 						  this.name = name;
 						  this.form = form;
 
+						  if ( !!this.messenger ) {
+							  [ ...this.form.querySelectorAll( '[name=' + this.name + ']' ) ].forEach( elt => elt.addEventListener( 'focus', this.messenger.hide.bind( this.messenger ) ) );
+						  }
+
 						  return this;
 					  },
 

@@ -22,7 +22,9 @@ class Messenger {
 	}
 
 	hide() {
-		this.errorContainer.setAttribute( 'aria-hidden', 'true' );
+		if ( !!this.errorContainer ) {
+			this.errorContainer.setAttribute( 'aria-hidden', 'true' );
+		}
 	}
 
 	show( message ) {
