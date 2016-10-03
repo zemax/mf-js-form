@@ -130,17 +130,39 @@ module.exports =
 	var css = __webpack_require__(44);
 
 	var Messenger = function () {
-		function Messenger(elementt) {
+		function Messenger() {
+			var errorContainer = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
+
 			_classCallCheck(this, Messenger);
+
+			this.errorContainer = errorContainer;
+
+			if (!!errorContainer) {
+				this.errorContainer.addEventListener('click', this.hide.bind(this));
+			}
 		}
 
 		_createClass(Messenger, [{
+			key: 'clear',
+			value: function clear() {
+				if (!!this.errorContainer) {
+					this.errorContainer.innerHTML = '';
+				}
+			}
+		}, {
 			key: 'hide',
-			value: function hide() {}
+			value: function hide() {
+				this.errorContainer.setAttribute('aria-hidden', 'true');
+			}
 		}, {
 			key: 'show',
 			value: function show(message) {
 				console.log(message);
+
+				if (!!this.errorContainer) {
+					this.errorContainer.innerHTML += '<div>' + message + '</div>';
+					this.errorContainer.setAttribute('aria-hidden', 'false');
+				}
 			}
 		}]);
 
@@ -157,7 +179,8 @@ module.exports =
 			this.rules = [];
 			this.options = Object.assign({}, options);
 
-			this.messenger = new Messenger();
+			var errorContainer = !!options.errorContainer ? options.errorContainer : this.form.querySelector('.main-error-container');
+			this.messenger = new Messenger(errorContainer);
 
 			this.form.addEventListener('submit', this.check.bind(this));
 		}
@@ -174,6 +197,8 @@ module.exports =
 			value: function add(name) {
 				var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
+				// Search for fieldContainer
+
 				var fieldContainer = false;
 				if (!!options.fieldContainer) {
 					fieldContainer = options.fieldContainer;
@@ -182,18 +207,20 @@ module.exports =
 					fieldContainer = !!fieldContainer ? fieldContainer.parentNode : false;
 				}
 
-				var errorContainer = false;
-				if (!!options.errorContainer) {
-					errorContainer = options.errorContainer;
-				} else {
-					errorContainer = !!fieldContainer ? fieldContainer.querySelector('.error-container') : false;
-					errorContainer = !!errorContainer ? errorContainer : false;
+				// Search for error messenger
+
+				if (!options.messenger && !!options.errorContainer) {
+					options.messenger = new Messenger(options.errorContainer);
+				}
+
+				if (!options.messenger && !!fieldContainer && !!fieldContainer.querySelector('.error-container')) {
+					options.messenger = new Messenger(fieldContainer.querySelector('.error-container'));
 				}
 
 				options = Object.assign({}, {
 					type: _Field2.default,
 					fieldContainer: fieldContainer,
-					errorContainer: errorContainer,
+					messenger: this.messenger,
 					errorMessage: "Merci de remplir ce champ."
 				}, options);
 
@@ -216,58 +243,38 @@ module.exports =
 		}, {
 			key: 'check',
 			value: function check(e) {
-				this.messenger.hide();
-
-				var ok = true;
 				for (var i = 0, l = this.rules.length; i < l; i++) {
 					var rule = this.rules[i];
-					var valid = rule.validate();
+
+					if (!!rule.messenger) {
+						rule.messenger.clear();
+					}
+				}
+
+				var ok = true;
+				for (var _i = 0, _l = this.rules.length; _i < _l; _i++) {
+					var _rule = this.rules[_i];
+					var valid = _rule.validate();
 
 					if (!valid) {
-						if (!!rule.messenger) {
-							rule.messenger.show(rule.name);
-						} else {
-							this.messenger.show(rule.name);
+						if (!!_rule.messenger) {
+							_rule.messenger.show(_rule.getError());
 						}
 
-						if (!!rule.fieldContainer) {
-							css.addClass(rule.fieldContainer, 'error');
+						if (!!_rule.fieldContainer) {
+							css.addClass(_rule.fieldContainer, 'error');
 						}
 					} else {
-						if (!!rule.messenger) {
-							rule.messenger.hide();
+						if (!!_rule.messenger) {
+							_rule.messenger.hide();
 						}
 
-						if (!!rule.fieldContainer) {
-							css.removeClass(rule.fieldContainer, 'error');
+						if (!!_rule.fieldContainer) {
+							css.removeClass(_rule.fieldContainer, 'error');
 						}
 					}
 
 					ok = valid && ok;
-
-					/*
-	     options.currentStatus = ok;
-	    	 if ( (options.required || !isNotEmpty( value, options )) && !options.validate( value, options ) ) {
-	     ok = false;
-	    	 if ( options.errorContainer != undefined ) {
-	     if ( options.errorMessageContainer != undefined ) {
-	     options.errorMessageContainer.html( options.errorMessage );
-	     }
-	     else {
-	     options.errorContainer.html( options.errorMessage );
-	     }
-	     options.errorContainer.show();
-	     }
-	     else {
-	     this.messenger.show( options.errorMessage );
-	     }
-	    	 }
-	     else {
-	     if ( options.errorContainer != undefined ) {
-	     options.errorContainer.hide();
-	     }
-	    	 }
-	     */
 				}
 
 				if (!ok) {
@@ -374,6 +381,10 @@ module.exports =
 
 			validate: function validate() {
 				return !this.required;
+			},
+
+			getError: function getError() {
+				return !!this.errorMessage ? this.errorMessage : '';
 			}
 		};
 
@@ -1111,36 +1122,43 @@ ready( function () {
 	let o = manager( document.querySelector( '.form-1' ) )
 		.add( 'civility', {
 			type:           rules.Radio,
+			errorMessage:   'Merci de remplir votre civilité',
 			fieldContainer: document.querySelector( '.form-1 .civility' )
 		} )
 		.add( 'firstname', {
-			modificator: function ( str ) {
+			errorMessage: 'Merci de remplir votre prénom',
+			modificator:  function ( str ) {
 				return str.trim().toLocaleUpperCase().substr( 0, 1 ) + str.trim().toLocaleLowerCase().substr( 1 );
 			}
 		} )
 		.add( 'lastname', {
-			modificator: function ( str ) {
+			errorMessage: 'Merci de remplir votre nom',
+			modificator:  function ( str ) {
 				return str.trim().toLocaleUpperCase();
 			}
 		} )
 		.add( 'email', {
-			modificator: function ( str ) {
+			errorMessage: 'Merci de remplir votre email',
+			modificator:  function ( str ) {
 				return str.trim().toLocaleLowerCase();
 			},
-			validator:   validators.isEmail
+			validator:    validators.isEmail
 		} )
 		.add( 'mobile', { required: false } )
 		.add( 'phone', { required: false } )
 		.add( 'one-phone', {
-			type:     rules.Rule,
-			validate: function () {
+			type:         rules.Rule,
+			errorMessage: 'Merci de remplir au moins un numéro de téléphone',
+			validate:     function () {
 				let v = (!!this.form.querySelector( '[name=mobile]' ).value || !!this.form.querySelector( '[name=phone]' ).value);
 				return v;
 			}
 		} )
-		.add( 'country' )
+		.add( 'country', {
+			errorMessage: 'Merci de remplir votre pays',
+		} )
 		.submit( _ => {
-			console.log( 'Fine !' );
+			console.log( 'Submitting...' );
 		} );
 } );
 

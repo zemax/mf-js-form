@@ -94,6 +94,10 @@
 			box-shadow:    0 0 5px rgba(0, 0, 0, 0.1);
 		}
 
+		.error-container[aria-hidden=false] {
+			display: block;
+		}
+
 		.error-container:before {
 			content:          '';
 			position:         absolute;
@@ -115,10 +119,6 @@
 			border:           10px solid transparent;
 			border-top-color: #ffffff;
 		}
-
-		.field.error .error-container {
-			display: block;
-		}
 	</style>
 </head>
 <body>
@@ -128,15 +128,12 @@
 		<div class="civility-choice">
 			<input id="form-1-civility-Mme" type="radio" name="civility" value="Mme">
 			<label for="form-1-civility-Mme">Mme.</label>
-
-			<div class="error-container"></div>
 		</div>
 		<div class="civility-choice">
 			<input id="form-1-civility-M" type="radio" name="civility" value="M">
 			<label for="form-1-civility-M">M.</label>
-
-			<div class="error-container"></div>
 		</div>
+		<div class="error-container"></div>
 	</div>
 	<div class="field firstname">
 		<label for="form-1-firstname">Firstname *</label>
@@ -176,11 +173,11 @@
 			<option value="en">UK</option>
 			<option value="de">Germany</option>
 		</select>
-
-		<div class="error-container"></div>
 	</div>
-	<div class="submit">
+	<div class="field submit">
 		<button type="submit">Valider</button>
+
+		<div class="error-container main-error-container"></div>
 	</div>
 </form>
 <script src="script.js"></script>

@@ -7,16 +7,31 @@ import Field from './rules/Field';
 const css = require( 'mf-js/modules/dom/cssClass' );
 
 class Messenger {
-	constructor( elementt ) {
+	constructor( errorContainer = false ) {
+		this.errorContainer = errorContainer;
 
+		if ( !!errorContainer ) {
+			this.errorContainer.addEventListener( 'click', this.hide.bind( this ) );
+		}
+	}
+
+	clear() {
+		if ( !!this.errorContainer ) {
+			this.errorContainer.innerHTML = '';
+		}
 	}
 
 	hide() {
-
+		this.errorContainer.setAttribute( 'aria-hidden', 'true' );
 	}
 
 	show( message ) {
 		console.log( message );
+
+		if ( !!this.errorContainer ) {
+			this.errorContainer.innerHTML += `<div>${message}</div>`;
+			this.errorContainer.setAttribute( 'aria-hidden', 'false' );
+		}
 	}
 }
 
@@ -26,7 +41,8 @@ class FormManager {
 		this.rules   = [];
 		this.options = Object.assign( {}, options );
 
-		this.messenger = new Messenger();
+		let errorContainer = !!options.errorContainer ? options.errorContainer : this.form.querySelector( '.main-error-container' );
+		this.messenger     = new Messenger( errorContainer );
 
 		this.form.addEventListener( 'submit', this.check.bind( this ) );
 	}
@@ -37,6 +53,8 @@ class FormManager {
 	 * @param options
 	 */
 	add( name, options = {} ) {
+		// Search for fieldContainer
+
 		let fieldContainer = false;
 		if ( !!options.fieldContainer ) {
 			fieldContainer = options.fieldContainer;
@@ -46,19 +64,20 @@ class FormManager {
 			fieldContainer = !!fieldContainer ? fieldContainer.parentNode : false;
 		}
 
-		let errorContainer = false;
-		if ( !!options.errorContainer ) {
-			errorContainer = options.errorContainer;
+		// Search for error messenger
+
+		if ( !options.messenger && !!options.errorContainer ) {
+			options.messenger = new Messenger( options.errorContainer );
 		}
-		else {
-			errorContainer = !!fieldContainer ? fieldContainer.querySelector( '.error-container' ) : false;
-			errorContainer = !!errorContainer ? errorContainer : false;
+
+		if ( !options.messenger && !!fieldContainer && !!fieldContainer.querySelector( '.error-container' ) ) {
+			options.messenger = new Messenger( fieldContainer.querySelector( '.error-container' ) );
 		}
 
 		options = Object.assign( {}, {
 			type:           Field,
 			fieldContainer: fieldContainer,
-			errorContainer: errorContainer,
+			messenger:      this.messenger,
 			errorMessage:   "Merci de remplir ce champ."
 		}, options );
 
@@ -77,7 +96,13 @@ class FormManager {
 	 * @param e
 	 */
 	check( e ) {
-		this.messenger.hide();
+		for ( let i = 0, l = this.rules.length; i < l; i++ ) {
+			let rule = this.rules[ i ];
+
+			if ( !!rule.messenger ) {
+				rule.messenger.clear();
+			}
+		}
 
 		let ok = true;
 		for ( let i = 0, l = this.rules.length; i < l; i++ ) {
@@ -86,10 +111,7 @@ class FormManager {
 
 			if ( !valid ) {
 				if ( !!rule.messenger ) {
-					rule.messenger.show( rule.name );
-				}
-				else {
-					this.messenger.show( rule.name );
+					rule.messenger.show( rule.getError() );
 				}
 
 				if ( !!rule.fieldContainer ) {
@@ -107,34 +129,6 @@ class FormManager {
 			}
 
 			ok = valid && ok;
-
-			/*
-			 options.currentStatus = ok;
-
-			 if ( (options.required || !isNotEmpty( value, options )) && !options.validate( value, options ) ) {
-			 ok = false;
-
-			 if ( options.errorContainer != undefined ) {
-			 if ( options.errorMessageContainer != undefined ) {
-			 options.errorMessageContainer.html( options.errorMessage );
-			 }
-			 else {
-			 options.errorContainer.html( options.errorMessage );
-			 }
-			 options.errorContainer.show();
-			 }
-			 else {
-			 this.messenger.show( options.errorMessage );
-			 }
-
-			 }
-			 else {
-			 if ( options.errorContainer != undefined ) {
-			 options.errorContainer.hide();
-			 }
-
-			 }
-			 */
 		}
 
 		if ( !ok ) {

@@ -14,6 +14,10 @@ function Rule( options = {} ) {
 		validate: function () {
 			return !this.required;
 		},
+
+		getError: function () {
+			return !!this.errorMessage ? this.errorMessage : '';
+		}
 	};
 
 	return Object.assign( o, options );
