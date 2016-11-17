@@ -152,7 +152,9 @@ module.exports =
 		}, {
 			key: 'hide',
 			value: function hide() {
-				this.errorContainer.setAttribute('aria-hidden', 'true');
+				if (!!this.errorContainer) {
+					this.errorContainer.setAttribute('aria-hidden', 'true');
+				}
 			}
 		}, {
 			key: 'show',
@@ -203,7 +205,7 @@ module.exports =
 				if (!!options.fieldContainer) {
 					fieldContainer = options.fieldContainer;
 				} else {
-					fieldContainer = this.form.querySelector('[name=' + name + ']');
+					fieldContainer = this.form.querySelector('[name="' + name + '"]');
 					fieldContainer = !!fieldContainer ? fieldContainer.parentNode : false;
 				}
 
@@ -334,7 +336,11 @@ module.exports =
 			set: function set(name, form) {
 				this.name = name;
 				this.form = form;
-				this.element = form.querySelector('[name=' + name + ']');
+				this.element = form.querySelector('[name="' + name + '"]');
+
+				if (!!this.element && !!this.messenger) {
+					this.element.addEventListener('focus', this.messenger.hide.bind(this.messenger));
+				}
 
 				return this;
 			},
@@ -1008,19 +1014,29 @@ module.exports =
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 	function Radio() {
 		var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
 		var o = (0, _Rule2.default)({
 			set: function set(name, form) {
+				var _this = this;
+
 				this.name = name;
 				this.form = form;
+
+				if (!!this.messenger) {
+					[].concat(_toConsumableArray(this.form.querySelectorAll('[name="' + this.name + '"]'))).forEach(function (elt) {
+						return elt.addEventListener('focus', _this.messenger.hide.bind(_this.messenger));
+					});
+				}
 
 				return this;
 			},
 
 			validate: function validate() {
-				var c = this.form.querySelector('[name=' + this.name + ']:checked');
+				var c = this.form.querySelector('[name="' + this.name + '"]:checked');
 				var value = !!c ? c.value : null;
 
 				return (0, _isNotEmpty2.default)(value);
@@ -1131,7 +1147,7 @@ ready( function () {
 				return str.trim().toLocaleUpperCase().substr( 0, 1 ) + str.trim().toLocaleLowerCase().substr( 1 );
 			}
 		} )
-		.add( 'lastname', {
+		.add( 'user[lastname]', {
 			errorMessage: 'Merci de remplir votre nom',
 			modificator:  function ( str ) {
 				return str.trim().toLocaleUpperCase();

@@ -10,14 +10,14 @@ function Radio( options = {} ) {
 						  this.form = form;
 
 						  if ( !!this.messenger ) {
-							  [ ...this.form.querySelectorAll( '[name=' + this.name + ']' ) ].forEach( elt => elt.addEventListener( 'focus', this.messenger.hide.bind( this.messenger ) ) );
+							  [ ...this.form.querySelectorAll( '[name="' + this.name + '"]' ) ].forEach( elt => elt.addEventListener( 'focus', this.messenger.hide.bind( this.messenger ) ) );
 						  }
 
 						  return this;
 					  },
 
 					  validate: function () {
-						  let c     = this.form.querySelector( '[name=' + this.name + ']:checked' );
+						  let c     = this.form.querySelector( '[name="' + this.name + '"]:checked' );
 						  let value = !!c ? c.value : null;
 
 						  return isNotEmpty( value );

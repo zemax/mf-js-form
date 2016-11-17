@@ -19,7 +19,7 @@ ready( function () {
 				return str.trim().toLocaleUpperCase().substr( 0, 1 ) + str.trim().toLocaleLowerCase().substr( 1 );
 			}
 		} )
-		.add( 'lastname', {
+		.add( 'user[lastname]', {
 			errorMessage: 'Merci de remplir votre nom',
 			modificator:  function ( str ) {
 				return str.trim().toLocaleUpperCase();

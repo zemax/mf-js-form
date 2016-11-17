@@ -1,6 +1,6 @@
 {
 	"name":            "mf-js-form",
-	"version":         "0.1.2",
+	"version":         "0.1.4",
 	"description":     "JS Form tool",
 	"main":            "dist/mf-js-form.js",
 	"scripts":         {

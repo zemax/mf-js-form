@@ -17,7 +17,7 @@ function Field( options = {} ) {
 					  set: function ( name, form ) {
 						  this.name    = name;
 						  this.form    = form;
-						  this.element = form.querySelector( '[name=' + name + ']' );
+						  this.element = form.querySelector( '[name="' + name + '"]' );
 
 						  if ( !!this.element && !!this.messenger ) {
 							  this.element.addEventListener( 'focus', this.messenger.hide.bind( this.messenger ) );

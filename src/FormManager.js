@@ -62,7 +62,7 @@ class FormManager {
 			fieldContainer = options.fieldContainer;
 		}
 		else {
-			fieldContainer = this.form.querySelector( '[name=' + name + ']' );
+			fieldContainer = this.form.querySelector( '[name="' + name + '"]' );
 			fieldContainer = !!fieldContainer ? fieldContainer.parentNode : false;
 		}
 
