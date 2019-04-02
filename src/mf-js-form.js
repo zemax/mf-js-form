@@ -1,5 +1,3 @@
-"use strict";
-
 import manager from './FormManager';
 import Rule from './rules/Rule';
 import Field from './rules/Field';
@@ -7,8 +5,9 @@ import Radio from './rules/Radio';
 import isEmpty from './validators/isEmpty';
 import isNotEmpty from './validators/isNotEmpty';
 import isEmail from './validators/isEmail';
+import domready from "mf-js/modules/dom/ready";
 
-module.exports = {
+const x = {
 	manager:    manager,
 	rules:      {
 		Rule:  Rule,
@@ -21,3 +20,9 @@ module.exports = {
 		isEmail:    isEmail
 	}
 };
+
+export default x;
+
+if ( typeof exports === 'object' ) {
+	module.exports = x;
+}

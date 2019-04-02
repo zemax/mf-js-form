@@ -1,10 +1,6 @@
-"use strict";
-
-require( 'core-js/fn/object/assign' );
-
+import 'core-js/fn/object/assign';
+import css from 'mf-js/modules/dom/css';
 import Field from './rules/Field';
-
-const css = require( 'mf-js/modules/dom/cssClass' );
 
 class Messenger {
 	constructor( errorContainer = false ) {

@@ -1,10 +1,10 @@
-"use strict";
+import ready from 'mf-js/modules/dom/ready' ;
 
-const ready = require( 'mf-js/modules/dom/ready' );
+const form_manager = require( '../dist/mf-js-form' );
 
-const manager    = require( '../dist/mf-js-form' ).manager;
-const rules      = require( '../dist/mf-js-form' ).rules;
-const validators = require( '../dist/mf-js-form' ).validators;
+const manager    = form_manager.manager;
+const rules      = form_manager.rules;
+const validators = form_manager.validators;
 
 ready( function () {
 	let o = manager( document.querySelector( '.form-1' ) )

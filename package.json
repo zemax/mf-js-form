@@ -2,37 +2,38 @@
 	"name":            "mf-js-form",
 	"version":         "0.1.4",
 	"description":     "JS Form tool",
-	"main":            "dist/mf-js-form.js",
-	"scripts":         {
-		"build":            "./node_modules/.bin/webpack",
-		"build:production": "./node_modules/.bin/webpack --production",
-		"test":             "./node_modules/.bin/browserify test/main.js --outfile test/script.js",
-		"watch:build":      "./node_modules/.bin/watch \"npm run build\" src/",
-		"watch:test":       "./node_modules/.bin/watch \"npm run test\" dist/",
-		"watch":            "./node_modules/.bin/concurrently 'npm run watch:build' 'npm run watch:test'"
-	},
+	"author":          "Maxime Cousinou",
+	"homepage":        "https://github.com/zemax/mf-js-form#readme",
+	"license":         "MIT",
+	"main":            "src/mf-js-form.js",
 	"repository":      {
 		"type": "git",
 		"url":  "git+ssh://git@github.com/zemax/mf-js-form.git"
 	},
-	"author":          "Maxime Cousinou",
-	"license":         "MIT",
 	"bugs":            {
 		"url": "https://github.com/zemax/mf-js-form/issues"
 	},
-	"homepage":        "https://github.com/zemax/mf-js-form#readme",
+	"scripts":         {
+		"build":            "webpack --config node.build-js.js --colors --bail -d",
+		"build:production": "webpack --config node.build-js.js --colors --bail -p",
+		"test":             "webpack --config test/node.build-test.js --colors --bail -p"
+	},
 	"devDependencies": {
-		"babel-core":          "^6.7.4",
-		"babel-loader":        "^6.2.4",
-		"babel-preset-es2015": "^6.6.0",
-		"babelify":            "^7.2.0",
-		"browserify":          "^13.0.0",
-		"concurrently":        "^2.0.0",
-		"core-js":             "^2.2.1",
-		"livereload":          "^0.4.1",
-		"mf-js":               "^1.1.2",
-		"uglifyjs":            "^2.4.10",
-		"watch":               "^0.17.1",
-		"webpack":             "^1.12.14"
+		"@babel/cli":                          "^7.2.3",
+		"@babel/core":                         "^7.4.0",
+		"@babel/plugin-syntax-dynamic-import": "^7.2.0",
+		"@babel/plugin-transform-runtime":     "^7.4.0",
+		"@babel/preset-env":                   "^7.4.2",
+		"@babel/preset-react":                 "^7.0.0",
+		"@babel/runtime":                      "^7.4.2",
+		"acorn":                               "^6.1.1",
+		"acorn-dynamic-import":                "^4.0.0",
+		"babel-loader":                        "^8.0.5",
+		"core-js":                             "^2.6.5",
+		"mf-js":                               "^2.0.3",
+		"terser-webpack-plugin":               "^1.2.3",
+		"watch":                               "^1.0.2",
+		"webpack":                             "^4.29.6",
+		"webpack-cli":                         "^3.3.0"
 	}
 }

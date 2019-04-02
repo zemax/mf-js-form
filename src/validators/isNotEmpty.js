@@ -1,5 +1,3 @@
-"use strict";
-
 import isEmpty from './isEmpty';
 
 function isNotEmpty( str ) {

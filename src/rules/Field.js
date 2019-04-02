@@ -1,5 +1,3 @@
-"use strict";
-
 import Rule from './Rule';
 import isEmpty from '../validators/isEmpty';
 import isNotEmpty from '../validators/isNotEmpty';

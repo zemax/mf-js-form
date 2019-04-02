@@ -1,5 +1,3 @@
-"use strict";
-
 function Rule( options = {} ) {
 	let o = {
 		required: false,
