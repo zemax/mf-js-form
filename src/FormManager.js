@@ -1,4 +1,3 @@
-import 'core-js/fn/object/assign';
 import css from 'mf-js/modules/dom/css';
 import Field from './rules/Field';
 

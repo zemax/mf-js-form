@@ -1,6 +1,7 @@
+import 'core-js/fn/object/assign';
 import ready from 'mf-js/modules/dom/ready' ;
 
-const form_manager = require( '../dist/mf-js-form' );
+import form_manager from '../src/mf-js-form';
 
 const manager    = form_manager.manager;
 const rules      = form_manager.rules;

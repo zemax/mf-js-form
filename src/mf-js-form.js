@@ -5,7 +5,6 @@ import Radio from './rules/Radio';
 import isEmpty from './validators/isEmpty';
 import isNotEmpty from './validators/isNotEmpty';
 import isEmail from './validators/isEmail';
-import domready from "mf-js/modules/dom/ready";
 
 const x = {
 	manager:    manager,

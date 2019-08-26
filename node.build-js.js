@@ -10,8 +10,8 @@ const configuration = {
 		'mf-js-form': [ path.join( __dirname, "src/mf-js-form.js" ) ]
 	},
 	output:  {
-		path:          path.join( __dirname, "commonjs/" ),
-		publicPath:    'commonjs/',
+		path:          path.join( __dirname, "dist/" ),
+		publicPath:    'dist/',
 		filename:      '[name].js',
 		chunkFilename: '[name].bundle.js'
 	},
